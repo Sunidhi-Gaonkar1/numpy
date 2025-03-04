@@ -190,12 +190,12 @@ jobs:
       #     python-version: ${{ matrix.python }}
       #     architecture: "ppc64le"
 
-      # - name: Install Python 3.11
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
-      #     sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
-      #     python3 --version  
+      - name: Install Python 3.12
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3.12 python3.12-dev python3.12-venv
+          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 
+          python3 --version  
       # - name: Install cibuildwheel
       #   run: |
       #     pip install cibuildwheel
@@ -210,11 +210,12 @@ jobs:
           CIBW_ARCHS: "ppc64le"
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
         run: |
-          export PATH=$HOME/.local/bin:$PATH
+          #export PATH=$HOME/.local/bin:$PATH
           # sudo apt install python3-venv -y
           # python3 -m venv venv
           # source venv/bin/activate
-          pip3 install cibuildwheel
+          export PATH=$HOME/.local/bin:$PATH
+          python3 -m pip install cibuildwheel
           cibuildwheel
 
   #     - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
