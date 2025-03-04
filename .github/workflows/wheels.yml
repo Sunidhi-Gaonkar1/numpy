@@ -209,6 +209,8 @@ jobs:
           CIBW_FREE_THREADED_SUPPORT: True
           CIBW_ARCHS: "ppc64le"
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          CIBW_CONTAINER_ENGINE: podman
+          CIBW_CONTAINER_PRIVILEGED: true
         run: |
           export PATH=$HOME/.local/bin:$PATH
           # sudo apt install python3-venv -y
