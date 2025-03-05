@@ -96,7 +96,7 @@ jobs:
           # - [windows-2019, win_amd64, ""]
           # - [windows-2019, win32, ""]
         # TODO pypy: Add pp311 to this list when it comes out (pp310 removed)
-        python: ["cp312"] # "cp312", "cp313", "cp313t"]
+        python: ["cp313"] #, "cp312", "cp313", "cp313t"]
         # exclude:
         #   # Don't build PyPy 32-bit windows
         #   - buildplat: [windows-2019, win32, ""]
@@ -214,7 +214,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3.12 python3.12-dev python3.12-venv
-          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 
+          sudo update-alternatives --install /usr/bin/python python3 /usr/bin/python3.12 1 
           python3 --version 
           export PATH=$HOME/.local/bin:$PATH
           python3 -m venv venv
@@ -222,10 +222,10 @@ jobs:
           python3 -m pip install cibuildwheel
           cibuildwheel
 
-  #     - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
-  #       with:
-  #         name: ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
-  #         path: ./wheelhouse/*.whl
+      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        with:
+          name: ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
+          path: ./wheelhouse/*.whl
 
   #     - uses: mamba-org/setup-micromamba@068f1ab4b37ed9b3d9f73da7db90a0cda0a48d29
   #       with:
