@@ -33,7 +33,11 @@ if [[ "$INSTALL_OPENBLAS" = "true" ]] ; then
     PKG_CONFIG_PATH=$PROJECT_DIR/.openblas
     rm -rf $PKG_CONFIG_PATH
     mkdir -p $PKG_CONFIG_PATH
-    python -m pip install -r requirements/ci_requirements.txt
+    if [[ $(uname -m) = "ppc64le" ]] ; then
+        python -m pip install -r requirements/ci_ppc64le_requirements.txt
+    else
+        python -m pip install -r requirements/ci_requirements.txt
+    fi
     python -c "import scipy_openblas64; print(scipy_openblas64.get_pkg_config())" > $PKG_CONFIG_PATH/scipy-openblas.pc
     # Copy the shared objects to a path under $PKG_CONFIG_PATH, the build
     # will point $LD_LIBRARY_PATH there and then auditwheel/delocate-wheel will
