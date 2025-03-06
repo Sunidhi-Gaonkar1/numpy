@@ -84,7 +84,6 @@ jobs:
         buildplat:
           - [linux.ppc64le, manylinux_ppc64le, ""]    
           - [ubuntu-22.04, manylinux_x86_64, ""]
-          # - [linux.ppc64le, manylinux_ppc64le, ""]
           # - [ubuntu-22.04, musllinux_x86_64, ""]
           # - [ubuntu-22.04-arm, manylinux_aarch64, ""]
           # - [ubuntu-22.04-arm, musllinux_aarch64, ""]
@@ -96,7 +95,7 @@ jobs:
           # - [windows-2019, win_amd64, ""]
           # - [windows-2019, win32, ""]
         # TODO pypy: Add pp311 to this list when it comes out (pp310 removed)
-        python: ["cp313"] #, "cp312", "cp313", "cp313t"]
+        python: ["cp311", "cp312", "cp313", "cp313t"]
         # exclude:
         #   # Don't build PyPy 32-bit windows
         #   - buildplat: [windows-2019, win32, ""]
