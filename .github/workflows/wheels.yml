@@ -83,7 +83,7 @@ jobs:
         # https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
           - [ubuntu-22.04, manylinux_x86_64, ""]
-          - [ubuntu-22.04-8core, manylinux_ppc64le, ""]
+          - [ubuntu-22.04, manylinux_ppc64le, ""]
           # - [ubuntu-22.04, musllinux_x86_64, ""]
           # - [ubuntu-22.04-arm, manylinux_aarch64, ""]
           # - [ubuntu-22.04-arm, musllinux_aarch64, ""]
@@ -176,7 +176,6 @@ jobs:
         if: ${{ matrix.buildplat[1] == 'manylinux_ppc64le' }}
         run: |
           echo "CIBW_ARCHS="ppc64le"" >> "$GITHUB_ENV"
-          echo $(free)
           
 
       # - name: Set up free-threaded build
@@ -185,47 +184,47 @@ jobs:
       #   run: |
       #     echo "CIBW_BUILD_FRONTEND=pip; args: --no-build-isolation" >> "$GITHUB_ENV"
 
-      # - name: Build wheels
-      #   uses: pypa/cibuildwheel@6cccd09a31908ffd175b012fb8bf4e1dbda3bc6c  # v2.23.0
+      - name: Build wheels
+        uses: pypa/cibuildwheel@6cccd09a31908ffd175b012fb8bf4e1dbda3bc6c  # v2.23.0
+        env:
+          CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+
+      - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
+          path: ./wheelhouse/*.whl
+
+      - uses: mamba-org/setup-micromamba@0dea6379afdaffa5d528b3d1dabc45da37f443fc
+        with:
+          # for installation of anaconda-client, required for upload to
+          # anaconda.org
+          # Note that this step is *after* specific pythons have been used to
+          # build and test the wheel
+          # for installation of anaconda-client, for upload to anaconda.org
+          # environment will be activated after creation, and in future bash steps
+          init-shell: bash
+          environment-name: upload-env
+          create-args: >-
+            anaconda-client
+
+      # - name: Upload wheels
+      #   if: success() && github.repository == 'numpy/numpy'
+      #   shell: bash -el {0}
+      #   # see https://github.com/marketplace/actions/setup-miniconda for why
+      #   # `-el {0}` is required.
       #   env:
-      #     CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-
-      # - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
-      #   with:
-      #     name: ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
-      #     path: ./wheelhouse/*.whl
-
-      # - uses: mamba-org/setup-micromamba@0dea6379afdaffa5d528b3d1dabc45da37f443fc
-      #   with:
-      #     # for installation of anaconda-client, required for upload to
-      #     # anaconda.org
-      #     # Note that this step is *after* specific pythons have been used to
-      #     # build and test the wheel
-      #     # for installation of anaconda-client, for upload to anaconda.org
-      #     # environment will be activated after creation, and in future bash steps
-      #     init-shell: bash
-      #     environment-name: upload-env
-      #     create-args: >-
-      #       anaconda-client
-
-  #     - name: Upload wheels
-  #       if: success() && github.repository == 'numpy/numpy'
-  #       shell: bash -el {0}
-  #       # see https://github.com/marketplace/actions/setup-miniconda for why
-  #       # `-el {0}` is required.
-  #       env:
-  #         NUMPY_STAGING_UPLOAD_TOKEN: ${{ secrets.NUMPY_STAGING_UPLOAD_TOKEN }}
-  #         NUMPY_NIGHTLY_UPLOAD_TOKEN: ${{ secrets.NUMPY_NIGHTLY_UPLOAD_TOKEN }}
-  #       run: |
-  #         source tools/wheels/upload_wheels.sh
-  #         set_upload_vars
-  #         # trigger an upload to
-  #         # https://anaconda.org/scientific-python-nightly-wheels/numpy
-  #         # for cron jobs or "Run workflow" (restricted to main branch).
-  #         # Tags will upload to
-  #         # https://anaconda.org/multibuild-wheels-staging/numpy
-  #         # The tokens were originally generated at anaconda.org
-  #         upload_wheels
+      #     NUMPY_STAGING_UPLOAD_TOKEN: ${{ secrets.NUMPY_STAGING_UPLOAD_TOKEN }}
+      #     NUMPY_NIGHTLY_UPLOAD_TOKEN: ${{ secrets.NUMPY_NIGHTLY_UPLOAD_TOKEN }}
+      #   run: |
+      #     source tools/wheels/upload_wheels.sh
+      #     set_upload_vars
+      #     # trigger an upload to
+      #     # https://anaconda.org/scientific-python-nightly-wheels/numpy
+      #     # for cron jobs or "Run workflow" (restricted to main branch).
+      #     # Tags will upload to
+      #     # https://anaconda.org/multibuild-wheels-staging/numpy
+      #     # The tokens were originally generated at anaconda.org
+      #     upload_wheels
 
   # build_sdist:
   #   name: Build sdist
